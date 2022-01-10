@@ -1,6 +1,6 @@
 {
   "name": "@amelix/phoenix.js",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "A feature-rich API wrapper for the critically acclaimed chatting app Phoenix.. or something.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -29,6 +29,7 @@
     "lib/**/*"
   ],
   "devDependencies": {
+    "@types/node": "^17.0.8",
     "typescript": "^4.5.4"
   },
   "dependencies": {

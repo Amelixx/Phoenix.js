@@ -1,3 +1,11 @@
+import { IncomingMessage } from 'http'
+import * as https from 'https'
+
+export const hostname = "phoenix.amelix.xyz"
+export const apiPath = ""
+export const defaultIcon = 'https://' + hostname + '/avatars/default'
+export const messageQueryLimit = 150
+
 import Base from './classes/Base'
 import Channel from './classes/Channel'
 import { Client } from './classes/Client'
@@ -26,33 +34,44 @@ export {
     User
 }
 
-export const hostname = "phoenix.amelix.xyz"
-export const apiPath = ""
-export const defaultIcon = 'https://' + hostname + '/avatars/default'
-export const messageQueryLimit = 150
-
 class PhoenixResponse<T> {
-    res: Response
+    res: IncomingMessage
     body: T
-    constructor(res: Response, body: any) {
+    constructor(res: IncomingMessage, body: any) {
         this.res = res
         this.body = body
     }
 }
 
-export async function request<T=any>(method="GET", path:string, headers:{[k: string]: string}={}, write?:any, hostOverwrite?: string): Promise<PhoenixResponse<T>> {
+export async function request<T=any>(method="GET", path:string, headers:{[k: string]: string}={}, write?:any): Promise<PhoenixResponse<T>> {
     if (typeof write === "object") write = JSON.stringify(write);
 
-    const res = await fetch(`https://` + hostname + apiPath + path, {
-        method: method,
-        headers: headers,
-        body: write
-    }).catch(e => {throw new Error(e)})
-    if (res.ok) {
-        let body = await res.text()
-
-        try { body = JSON.parse(body) } catch {}
-        return new PhoenixResponse<T>(res, body)
-    }
-    else throw new Error(res.statusText)
+    return new Promise((resolve, reject) => {
+        const req = https.request({
+            hostname: hostname,
+            port: 443,
+            path: apiPath + path,
+            method: method,
+            headers: headers
+        }, res => {
+            let body = ""
+            res.on('data', chunk => {
+                body += chunk
+            })
+            
+            res.on('end', () => {
+                if (res.statusCode?.toString().startsWith("2")) {
+                    try { body = JSON.parse(body) } catch {}
+                    resolve(new PhoenixResponse<T>(res, body))
+                }
+                else {
+                    reject(res.statusMessage)
+                }
+            })
+        })
+        req.on('error', e => {
+            reject(e)
+        })
+        req.end(write)
+    })
 }
