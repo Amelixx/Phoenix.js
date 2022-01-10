@@ -35,7 +35,7 @@ bot.on('message', message => {
   }
 })
 ```
-There's no actual documentation for all of the features yet, ask me on the (Discord server)[https://discord.gg/Px5bA8gfme] if any assistance is required.
+There's no actual documentation for all of the features yet, ask me on the [Discord server](https://discord.gg/Px5bA8gfme) if any assistance is required.
 
 ## Selfbots
 Currently, I fully support the making of selfbots using this package. However, any large scale abuse and/or spamming will result in action taken against the amelix.xyz account.
