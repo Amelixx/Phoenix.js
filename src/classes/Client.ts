@@ -384,9 +384,9 @@ export class Client extends EventEmitter {
         let invite = this.invites.get(id)
         if (invite) return invite
 
-        const p = await request("GET", `/invites/${id}`)
-        if (!p.res.ok) return;
-        
+        const p = await request("GET", `/invites/${id}`).catch(e => null)
+        if (p === null) return;
+
         invite = new Invite(this, p.body)
         
         invite.channel.invites.set(id, invite)
