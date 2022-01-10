@@ -1,11 +1,12 @@
 {
   "name": "@amelix/phoenix.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A feature-rich API wrapper for the critically acclaimed chatting app Phoenix.. or something.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
