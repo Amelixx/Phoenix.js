@@ -1,0 +1,36 @@
+{
+  "name": "@amelix/phoenix.js",
+  "version": "0.1.0",
+  "description": "A feature-rich API wrapper for the critically acclaimed chatting app Phoenix.. or something.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amelixx/phoenix.js.git"
+  },
+  "keywords": [
+    "Phoenix",
+    "js",
+    "Chat",
+    "app",
+    "amelix"
+  ],
+  "author": "Amelix",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Amelixx/phoenix.js/issues"
+  },
+  "homepage": "https://github.com/Amelixx/phoenix.js#readme",
+  "files": [
+    "lib/**/*"
+  ],
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.4.1"
+  }
+}
