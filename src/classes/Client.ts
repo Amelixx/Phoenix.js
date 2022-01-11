@@ -76,7 +76,7 @@ export class Client extends EventEmitter {
         this.invites = new Map()
 
         this.user = new ClientUser(this, {})
-        this.request<ClientUser>("GET", "/users/me").then(res => {
+        this.request("GET", "/users/me").then(res => {
             this.user = new ClientUser(this, res.body)
             this.build()
         }).catch(e => {
@@ -113,7 +113,7 @@ export class Client extends EventEmitter {
 
     private connect() {
         const socketOptions: { [k: string]: any; } = {};
-        if (window.location.host === "localhost:3000") socketOptions.query = { token: this.token };
+        socketOptions.query = { token: "Bearer " + this.token };
 
         this.socket = io("https://" + hostname, socketOptions);
 
@@ -326,7 +326,7 @@ export class Client extends EventEmitter {
     async request<T=any>(method="GET", path:string, headers:{[k: string]: string}={}, write?:any): Promise<PhoenixResponse<T>> {
         if (typeof write === "object") write = JSON.stringify(write);
 
-        headers.authorization = this.token
+        headers.auth = "Bearer " + this.token
 
         return new Promise((resolve, reject) => {
             const req = https.request({
@@ -347,7 +347,7 @@ export class Client extends EventEmitter {
                         resolve(new PhoenixResponse<T>(res, body))
                     }
                     else {
-                        reject("An error occurred while connecting to Phoenix...\nServer responded with:\t" + res.statusMessage)
+                        reject("An error occurred while connecting to Phoenix...\nServer responded with:\t" + res.statusCode + " " + res.statusMessage)
                     }
                 })
             })
