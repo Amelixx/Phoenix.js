@@ -1,4 +1,4 @@
-import { hostname, request } from "..";
+import { hostname } from "..";
 import Base from "./Base";
 import { Client } from "./Client";
 import Invite from "./Invite";
@@ -67,7 +67,7 @@ export default class Message extends Base {
         if (!this.editable) throw new Error(`Cannot edit messages not made by the client.`)
         else if (this.content === newContent) return;
 
-        let res = await request("PUT", `/channels/${this.channel.id}/${this.id}`, { content: newContent })
+        let res = await this.client.request("PUT", `/channels/${this.channel.id}/${this.id}`, { content: newContent })
         this.content = res.body.content
         this._invitesCached = false
         await this.fetchInvites()
@@ -78,7 +78,7 @@ export default class Message extends Base {
         if (!this.deletable) throw new Error(`Insufficient Permissions`)
         // else if (insert permissions stuff) { ... }
 
-        await request("DELETE", `/channels/${this.channel.id}/${this.id}`)
+        await this.client.request("DELETE", `/channels/${this.channel.id}/${this.id}`)
     }
 
     /** Go through all Phoenix invites in this message and cache Invite objects for them, returning the invites. */

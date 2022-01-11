@@ -1,4 +1,3 @@
-import { request } from "..";
 import Base from "./Base";
 import { Client } from "./Client";
 import DeletedUser from "./DeletedUser";
@@ -53,7 +52,7 @@ export default class Invite extends Base {
 
         if (this.client.user.id !== this.createdBy.id && this.client.user.id !== this.server.owner.id) throw new Error("Insufficient Permissions")
 
-        const res = await request<Invite>("PUT", `/channels/${this.channel.id}/invites/${this.id}`, {}, data)
+        const res = await this.client.request<Invite>("PUT", `/channels/${this.channel.id}/invites/${this.id}`, {}, data)
         this.id = res.body.id
         this.maxUses = res.body.maxUses
         this.expires = res.body.expires
@@ -64,7 +63,7 @@ export default class Invite extends Base {
     async delete() {
         if (this.client.user.id !== this.createdBy.id && this.client.user.id !== this.server.owner.id) throw new Error("Insufficient Permissions")
 
-        await request("DELETE", `/channels/${this.channel.id}/invites/${this.id}`)
+        await this.client.request("DELETE", `/channels/${this.channel.id}/invites/${this.id}`)
     }
 }
 

@@ -1,5 +1,7 @@
+import * as https from 'https'
+
 import { io, Socket } from "socket.io-client";
-import { defaultIcon, hostname, request } from "..";
+import { apiPath, defaultIcon, hostname, PhoenixResponse } from "..";
 import { AnyChannel } from "./Channel";
 import ClientUser from "./ClientUser";
 import DeletedUser from "./DeletedUser";
@@ -74,7 +76,7 @@ export class Client extends EventEmitter {
         this.invites = new Map()
 
         this.user = new ClientUser(this, {})
-        request<ClientUser>("GET", "/users/me").then(res => {
+        this.request<ClientUser>("GET", "/users/me").then(res => {
             this.user = new ClientUser(this, res.body)
             this.build()
         }).catch(e => {
@@ -105,7 +107,7 @@ export class Client extends EventEmitter {
      */
     async logout() {
         if (this.user.bot) throw new Error("Bots cannot logout. Did you mean to refresh the token?")
-        await request("POST", "/logout")
+        await this.request("POST", "/logout")
         this.disconnect()
     }
 
@@ -313,12 +315,47 @@ export class Client extends EventEmitter {
      */
     async createServer(name: string): Promise<Server> {
         if (this.user.bot) throw new Error("Bots cannot create servers.")
-        const res = await request("POST", "/servers", {}, name ? `{"name": "${name}"}` : ""),
+        const res = await this.request("POST", "/servers", {}, name ? `{"name": "${name}"}` : ""),
             server = await this.fetchServer(res.body)
 
         this.servers.set(server.id, server)
 
         return server
+    }
+
+    async request<T=any>(method="GET", path:string, headers:{[k: string]: string}={}, write?:any): Promise<PhoenixResponse<T>> {
+        if (typeof write === "object") write = JSON.stringify(write);
+
+        headers.authorization = this.token
+
+        return new Promise((resolve, reject) => {
+            const req = https.request({
+                hostname: hostname,
+                port: 443,
+                path: apiPath + path,
+                method: method,
+                headers: headers
+            }, res => {
+                let body = ""
+                res.on('data', chunk => {
+                    body += chunk
+                })
+                
+                res.on('end', () => {
+                    if (res.statusCode?.toString().startsWith("2")) {
+                        try { body = JSON.parse(body) } catch {}
+                        resolve(new PhoenixResponse<T>(res, body))
+                    }
+                    else {
+                        reject("An error occurred while connecting to Phoenix...\nServer responded with:\t" + res.statusMessage)
+                    }
+                })
+            })
+            req.on('error', e => {
+                reject(e)
+            })
+            req.end(write)
+        })
     }
 
     private async fetchServer(serverResolvable: string | { [k: string]: any }) {
@@ -327,7 +364,7 @@ export class Client extends EventEmitter {
             let server = this.servers.get(serverResolvable)
             if (server) return server
 
-            const res = await request("GET", "/servers/" + serverResolvable)
+            const res = await this.request("GET", "/servers/" + serverResolvable)
             data = res.body
         }
         else data = serverResolvable
@@ -355,7 +392,7 @@ export class Client extends EventEmitter {
         let value = this.channels.get(id)
         if (value) return value
 
-        const res = await request("GET", "/channels/" + id)
+        const res = await this.request("GET", "/channels/" + id)
         let channel
         if (res.body.type === "text") channel = new TextChannel(this, res.body)
 
@@ -370,7 +407,7 @@ export class Client extends EventEmitter {
         let user = this.users.get(id)
         if (user) return user
 
-        const res = await request("GET", `/users/` + id)
+        const res = await this.request("GET", `/users/` + id)
         
         if (res.body.deletedAt) user = new DeletedUser(this, res.body)
         else user = new User(this, res.body)
@@ -384,7 +421,7 @@ export class Client extends EventEmitter {
         let invite = this.invites.get(id)
         if (invite) return invite
 
-        const p = await request("GET", `/invites/${id}`).catch(e => null)
+        const p = await this.request("GET", `/invites/${id}`).catch(e => null)
         if (p === null) return;
 
         invite = new Invite(this, p.body)

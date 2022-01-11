@@ -1,4 +1,4 @@
-import { apiPath, defaultIcon, hostname, request } from "..";
+import { apiPath, defaultIcon, hostname } from "..";
 import Base from "./Base";
 import { Client } from "./Client";
 import Member from "./Member";
@@ -44,7 +44,7 @@ export default class Server extends Base {
      * @returns Created channel
      */
     async createChannel(data: ServerChannelData): Promise<AnyServerChannel> {
-        const res = await request("POST", `/servers/${this.id}/channels`, {}, data)
+        const res = await this.client.request("POST", `/servers/${this.id}/channels`, {}, data)
         let channel = res.body;
         if (data.type === "text") channel = new TextChannel(this.client, channel);
 
@@ -57,7 +57,7 @@ export default class Server extends Base {
     async fetchMember(id: string) {
         if (this.members.has(id)) return this.members.get(id)
 
-        const res = await request("GET", `/servers/${this.id}/members/${id}`).catch(e => {})
+        const res = await this.client.request("GET", `/servers/${this.id}/members/${id}`).catch(e => {})
         if (!res) return;
 
         const member = new Member(this.client, res.body)
@@ -68,7 +68,7 @@ export default class Server extends Base {
     async fetchMembers() {
         if (this.membersCached) return this.members
 
-        let res = await request<Map<string, Member>>("GET", `/servers/${this.id}/members`)
+        let res = await this.client.request<Map<string, Member>>("GET", `/servers/${this.id}/members`)
         for (let arr of res.body) {
             let user = this.client.users.get(arr[0])
             if (user) arr[1].user = user
@@ -82,14 +82,14 @@ export default class Server extends Base {
     async deleteIcon() {
         if (this.client.user.id !== this.owner.id) throw new Error("Insufficient Permissions")
 
-        await request("DELETE", `/servers/${this.id}/icon`)
+        await this.client.request("DELETE", `/servers/${this.id}/icon`)
     }
 
     /** Fetch this server's CSS. */
     async fetchCSS() {
         if (this.css) return this.css
 
-        let res = await request<string>(`GET`, `/servers/${this.id}/css`)
+        let res = await this.client.request<string>(`GET`, `/servers/${this.id}/css`)
         this.css = res.body
         return res.body
     }
@@ -101,7 +101,7 @@ export default class Server extends Base {
         if (this.client.user.id !== this.owner.id) throw new Error("Insufficient Permissions")
         else if (!css) throw new Error("No CSS provided")
 
-        let res = await request<string>("POST", `/servers/${this.id}/css`, {}, css)
+        let res = await this.client.request<string>("POST", `/servers/${this.id}/css`, {}, css)
         return res.body;
     }
 
@@ -111,7 +111,7 @@ export default class Server extends Base {
     async deleteCSS() {
         if (this.client.user.id !== this.owner.id) throw new Error("Insufficient Permissions")
         
-        await request("DELETE", `/servers/${this.id}/css`);
+        await this.client.request("DELETE", `/servers/${this.id}/css`);
         delete this.css
     }
 
@@ -126,7 +126,7 @@ export default class Server extends Base {
         if (data.owner && !password) throw new Error("Transferring ownership requires password!")
         else write.password = password
 
-        await request("PUT", `/servers/${this.id}`, write)
+        await this.client.request("PUT", `/servers/${this.id}`, write)
         return this;
     }
 
@@ -136,7 +136,7 @@ export default class Server extends Base {
         if (this.client.user.id !== this.owner.id) throw new Error(`Insufficient Permissions`)
 
         if (!password) throw new Error("Password required to delete servers")
-        await request("DELETE", `/servers/${this.id}`, {"Transfer-Encoding": "chunked"}, `{"password": "${password}"}`)
+        await this.client.request("DELETE", `/servers/${this.id}`, {"Transfer-Encoding": "chunked"}, `{"password": "${password}"}`)
     }
 }
 

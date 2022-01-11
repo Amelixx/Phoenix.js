@@ -1,4 +1,4 @@
-import { messageQueryLimit, request } from "..";
+import { messageQueryLimit } from "..";
 import { Client } from "./Client";
 import Message from "./Message";
 import ServerChannel from "./ServerChannel";
@@ -34,7 +34,7 @@ export default class TextChannel extends ServerChannel {
         if (!content) throw new Error("Cannot send empty messages!")
 
         this.stopTyping()
-        const res = await request("POST", "/channels/"+this.id, {}, {content: content})
+        const res = await this.client.request("POST", "/channels/"+this.id, {}, {content: content})
         return new Message(this.client, res.body)
     }
 
@@ -56,7 +56,7 @@ export default class TextChannel extends ServerChannel {
         let msg = this.messages.get(id)
         if (msg) return msg
 
-        const res = await request("GET", `/channels/${this.id}/messages/${id}`)
+        const res = await this.client.request("GET", `/channels/${this.id}/messages/${id}`)
         msg = await this.addMessage([id, res.body])
         return msg
     }
@@ -76,7 +76,7 @@ export default class TextChannel extends ServerChannel {
         const path = `/channels/${this.id}/messages${query}`
         if (this.messageQueries[path]) return this.messageQueries[path]
 
-        const res = await request("GET", path)
+        const res = await this.client.request("GET", path)
         let arr = res.body, out = new Map()
 
         if (options.before) {
