@@ -1,7 +1,7 @@
 import * as https from 'https'
 
 import { io, Socket } from "socket.io-client";
-import { apiPath, defaultIcon, hostname, PhoenixResponse } from "..";
+import { apiPath, defaultIcon, hostname } from "../config";
 import { AnyChannel } from "./Channel";
 import ClientUser from "./ClientUser";
 import DeletedUser from "./DeletedUser";
@@ -9,6 +9,7 @@ import EventEmitter from "./EventEmitter";
 import Invite from "./Invite";
 import Member from "./Member";
 import Message from "./Message";
+import PhoenixResponse from './PhoenixResponse'
 import Server from "./Server";
 import ServerChannel from "./ServerChannel";
 import TextChannel from "./TextChannel";

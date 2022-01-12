@@ -1,10 +1,3 @@
-import { IncomingMessage } from 'http'
-
-export const hostname = "phoenix.amelix.xyz"
-export const apiPath = ""
-export const defaultIcon = 'https://' + hostname + '/avatars/default'
-export const messageQueryLimit = 150
-
 import Base from './classes/Base'
 import Channel from './classes/Channel'
 import { Client } from './classes/Client'
@@ -20,24 +13,15 @@ import User from './classes/User'
 
 export {
     Base,
-    Channel,
     Client,
-    ClientUser,
-    DeletedUser,
-    Invite,
-    Member,
-    Message,
     Server,
+    Channel,
     ServerChannel,
     TextChannel,
-    User
-}
-
-export class PhoenixResponse<T> {
-    res: IncomingMessage
-    body: T
-    constructor(res: IncomingMessage, body: any) {
-        this.res = res
-        this.body = body
-    }
+    ClientUser,
+    User,
+    DeletedUser,
+    Member,
+    Message,
+    Invite,
 }

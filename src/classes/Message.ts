@@ -1,4 +1,4 @@
-import { hostname } from "..";
+import { hostname } from "../config";
 import Base from "./Base";
 import { Client } from "./Client";
 import Invite from "./Invite";

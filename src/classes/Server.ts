@@ -1,4 +1,4 @@
-import { apiPath, defaultIcon, hostname } from "..";
+import { apiPath, defaultIcon, hostname } from "../config";
 import Base from "./Base";
 import { Client } from "./Client";
 import Member from "./Member";

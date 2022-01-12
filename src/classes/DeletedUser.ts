@@ -1,4 +1,4 @@
-import { defaultIcon } from "..";
+import { defaultIcon } from "../config";
 import { Client } from "./Client";
 import User from "./User";
 

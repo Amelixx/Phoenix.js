@@ -3,7 +3,7 @@ import { Client } from "./Client";
 import Server from "./Server";
 
 import DeletedUser from "./DeletedUser";
-import { apiPath, defaultIcon, hostname } from "..";
+import { apiPath, defaultIcon, hostname } from "../config";
 
 export type AnyUser = User | DeletedUser
 

@@ -1,4 +1,4 @@
-import { messageQueryLimit } from "..";
+import { messageQueryLimit } from "../config";
 import { Client } from "./Client";
 import Message from "./Message";
 import ServerChannel from "./ServerChannel";
