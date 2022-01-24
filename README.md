@@ -6,6 +6,7 @@ As I develop the API, you can expect this package to be completely up to date an
 ## Links
 - [Website](https://phoenix.amelix.xyz)
 - [Phoenix Discord server](https://discord.gg/Px5bA8gfme)
+- [Phoenix Phoenix server](https://phoenix.amelix.xyz/invite/apocalypse)
 - [npm](https://www.npmjs.com/package/@amelix/phoenix.js)
 
 # Installation
