@@ -31,7 +31,7 @@ export default class User extends Base {
             this.avatarURL = `https://${hostname}${apiPath}/avatars/${this.id}`
         }
 
-        this.bot = data.bot
+        this.bot = data.bot || false
         
         if (data.mutualServers) this.mutualServers = data.mutualServers
     }
