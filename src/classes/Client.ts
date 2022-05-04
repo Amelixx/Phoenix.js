@@ -114,7 +114,7 @@ export class Client extends EventEmitter {
 
     private connect() {
         const socketOptions: { [k: string]: any; } = {};
-        socketOptions.query = { token: "Bearer " + this.token };
+        socketOptions.query = { token: this.token };
 
         this.socket = io("https://" + hostname, socketOptions);
 
@@ -327,7 +327,7 @@ export class Client extends EventEmitter {
     async request<T=any>(method="GET", path:string, headers:{[k: string]: string}={}, write?:any): Promise<PhoenixResponse<T>> {
         if (typeof write === "object") write = JSON.stringify(write);
 
-        headers.auth = "Bearer " + this.token
+        headers.authorization = this.token
 
         return new Promise((resolve, reject) => {
             const req = https.request({
