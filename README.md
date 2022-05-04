@@ -1,8 +1,6 @@
 # Phoenix.js
 An easy to understand, disturbingly similar to discord.js API wrapper designed to work with [phoenix.amelix.xyz](https://phoenix.amelix.xyz), a chatting app I developed the API for.
 
-As I develop the API, you can expect this package to be completely up to date and contain all API features pretty much as soon as they get added.
-
 ## Links
 - [Website](https://phoenix.amelix.xyz)
 - [Phoenix Discord server](https://discord.gg/Px5bA8gfme)
@@ -11,13 +9,11 @@ As I develop the API, you can expect this package to be completely up to date an
 
 # Installation
 ```
-npm install @amelix/phoenix.js
+npm i @amelix/phoenix.js
 ```
 
 # Usage
 Currently there's no user friendly method of making a bot on Phoenix, however, if by some chance you happen to have a bot (likely by being my friend), you can make a bot like this:
-
-It's very similar to discord.js - blame me, I spent 4 years of my life only coding in discord.js.
 ```js
 const Phoenix = require('@amelix/phoenix.js');
 
@@ -40,6 +36,16 @@ There's no actual documentation for all of the features yet, ask me on the [Disc
 
 ## Selfbots
 Currently, I fully support the making of selfbots using this package. However, any large scale abuse and/or spamming will result in action taken against the amelix.xyz account.
+Selfbots *may*  not work at this current stage. I don't partiuclarly prioritise making selfbots work with this library as that was never its primary function.
 
 ## Can I contribute?
-Sure.. If you think anything could be improved, but I will say that I probably use this package more than anyone else does and my decisions for how things are generally done in this package is final.
+If you think anything could be improved, submit a pull request and I'll have a look. I will say however that I probably use this package more than anyone else does and my decisions for how things are generally done in this package are final at the moment.
+
+If you do change something, make a file called "env.json" in the root folder with the contents:
+```json
+{
+  "token": "your bot token"
+}
+```
+Then run `npm run test`.
+This will build the repository and run `tests.js`. I put in a few things to ensure a bot can login and fetch other users - feel free to edit it how you like to ensure your change actually allows a bot to work.
