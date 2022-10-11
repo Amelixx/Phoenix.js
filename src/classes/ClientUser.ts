@@ -23,7 +23,7 @@ export default class ClientUser extends User {
         if (data.password && !oldPassword) throw new Error("Cannot edit password without old password")
         else data.password = oldPassword
 
-        await this.client.request("PUT", "/accounts/me", {}, data).catch(e => { throw new Error(e) })
+        await this.client.request("PUT", "/users/me", {}, data).catch(e => { throw new Error(e) })
         if (data.settings) this.settings = data.settings
     }
 
